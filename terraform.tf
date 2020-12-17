@@ -48,9 +48,20 @@ resource "aws_subnet" "my_subnet" {
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "prod-subnet"
+    Name = "prod-subnet1"
   }
 }
+
+resource "aws_subnet" "my_subnet2" {
+  vpc_id            = aws_vpc.prod-vpc.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "prod-subnet2"
+  }
+}
+
 
 
 # 5. Associate subnet with route table
