@@ -1,0 +1,14 @@
+---
+- name: install and start apache
+  hosts: worker1
+
+  tasks:
+  - name: return value to registered var
+    command: cat token
+    register: token
+
+  - debug:
+      var: token
+
+  - name: use argv command to send list
+    command: rm -f token

@@ -1,0 +1,18 @@
+---
+- name: Move configuration files and start master and slave JBOSS Servers
+  hosts: TM
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Permission on config server
+    file:
+      path: "{{ Edifecs_Install_Dir }}/TM/ConfigServer/config-server.sh"
+      mode: '0755'
+  
+
+  - name: Start config server
+    shell: "source ~/.bash_profile &&  nohup ./config-server.sh  > nohup.out 2>&1 &"
+    args:
+      chdir: "{{ Edifecs_Install_Dir }}/TM/ConfigServer"
+

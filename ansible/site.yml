@@ -1,0 +1,20 @@
+---
+- name: install and start apache
+  hosts: all
+  vars:
+    http_port: 80
+
+  tasks:
+  - name: yum update repo
+    command: yum update -y
+    args:
+      warn: no 
+
+  - name: install addcache dir
+    file: path=/opt/cache state=directory 
+   
+  - name: install nginx
+    command: yum install nginx -y
+    args:
+      warn: no
+    

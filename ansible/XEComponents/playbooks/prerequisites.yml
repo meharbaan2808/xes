@@ -1,0 +1,41 @@
+---
+- name: Prerequisites to install XE/XES/EAM
+  hosts: demo
+  vars_files:
+  - env_variables
+ 
+  tasks:
+  
+  - name: Create Java folder under {{Edifecs_Build_Path}}
+    file:
+       path: "{{ Edifecs_Build_PATH }}/JAVA"
+       state: directory
+       owner: administrator-vm
+       group: administrator-vm       
+       mode: '0755'
+
+  - name: Install Open jdk
+    get_url:
+       url: "{{ Java_Url }}/{{ Java_File }}" 
+       dest: "{{ Edifecs_Build_PATH }}/JAVA"
+       validate_certs: false
+       mode: '0755'
+
+  - name: Untar the downloaded Java
+    unarchive:
+       src: "{{ Edifecs_Build_PATH }}/JAVA/{{ Java_File }}"
+       dest: "{{ Edifecs_Build_PATH }}/JAVA"
+       remote_src: yes
+
+  - name: Copy bash profile
+    copy:
+      src: .bash_profile
+      dest: ~/.bash_profile
+      mode: '0755'
+      backup: yes
+
+  - name: refresh bash_profile
+    shell: "source /home/administrator-vm/.bash_profile && source .bash_profile"
+    args: 
+      executable: /bin/bash 
+

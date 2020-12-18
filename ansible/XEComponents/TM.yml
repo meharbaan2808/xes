@@ -1,0 +1,6 @@
+---
+- import_playbook: playbooks/Download_Configure_TM.yml
+- import_playbook: playbooks/Install_TM.yml
+- import_playbook: playbooks/Start_config_server.yml
+- import_playbook: playbooks/Start_tomcat.yml
+- import_playbook: playbooks/EAMServer_run.yaml

@@ -1,0 +1,29 @@
+---
+ - name: Download TM package and copy configuration files
+   hosts: demo
+   vars_files:
+   - env_variables
+
+   tasks:
+   - name: Install TM on Master
+     shell: bash -lc "./install.sh -i"
+     args:
+       chdir: "{{ Edifecs_Build_PATH }}/TM"
+
+   - name: Create TM.war file 
+     shell: "chmod 755 create-tm-war.sh && bash -lc ./create-tm-war.sh"
+     register: output1
+     args:
+       chdir: "{{ Edifecs_Build_PATH }}/TM/webapp"
+     when: "inventory_hostname == 'TM'"
+
+   - debug:
+       var: output1
+
+   - name: Transfer tm.war file to tomcat webapp folder on {{Tomcat_Host}}
+     synchronize:
+       src: "{{Edifecs_Build_PATH}}/TM/webapp/tm.war"
+       dest: "{{Edifecs_Install_Dir}}/Tomcat/apache-tomcat-9.0.24/webapps/"
+       mode: pull
+     delegate_to: "{{Tomcat_Host}}"
+     when: "inventory_hostname == 'TM'"

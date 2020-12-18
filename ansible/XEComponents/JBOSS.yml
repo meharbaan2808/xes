@@ -1,0 +1,5 @@
+---
+- import_playbook: playbooks/Install_jboss_master.yml
+- import_playbook: playbooks/Install_jboss_slave.yml
+- import_playbook: playbooks/conf_start_master.yml
+- import_playbook: playbooks/conf_start_slave.yml

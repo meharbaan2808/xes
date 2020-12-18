@@ -1,0 +1,49 @@
+#Edit these values only as per your environment
+#Enter your XE,XES and EAM path variables.
+XEngine_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/XE+XES+EAM9.1/InstallationPackage/XEngine/XEngine_9.1.0.6582_linux_ix86_64_20190330.tar.gz
+XEngine_File: XEngine_9.1.0.6582_linux_ix86_64_20190330.tar.gz
+
+XEServer_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/XE+XES+EAM9.1/InstallationPackage/XEServer/XEServer_9.1.0.7448_20190331.tar.gz
+XEServer_File: XEServer_9.1.0.7448_20190331.tar.gz
+
+EAM_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/XE+XES+EAM9.1/InstallationPackage/EAM/EAM_9.1.0.10917_20190331.tar.gz
+EAM_File: EAM_9.1.0.10917_20190331.tar.gz
+
+TM_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/TM9.0/InstallationPackage/9.0.0.5/TM-9_0_0_5.tar.gz
+TM_File: TM-9_0_0_5.tar.gz
+
+TM_Patch:
+
+TM_License: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/TM9.0/InstallationPackage/9.0.0.5/TM-9_0_0_5-license/license.lic.enterprise
+
+XEngine_HF_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/XE+XES+EAM9.1/Hotfixes/XE/hotfix05/XEngine_9.1.0_hotfix_5_6620_linux_ix86_64_20200202.tar.gz
+XEngine_HF_File: XEngine_9.1.0_hotfix_5_6620_linux_ix86_64_20200202.tar.gz
+
+XEServer_HF_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/XE+XES+EAM9.1/Hotfixes/XES/hotfix05/xes-hotfix-9.1.0.5.jar
+XEServer_HF_File: xes-hotfix-9.1.0.5.jar
+
+EAM_HF_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EdifecsProducts/XE+XES+EAM9.1/Hotfixes/EAM/hotfix06/eam-hotfix-9.1.0.6.jar
+EAM_HF_File: eam-hotfix-9.1.0.6.jar
+
+Tomcat_Host: XES1
+Tomcat_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/ThirdPartyTools/Tomcat/apache-tomcat-9.0.24.tar.gz
+Tomcat_File: apache-tomcat-9.0.24.tar.gz
+
+JBOSS_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/ThirdPartyTools/JBOSS/amq-broker-7.4.1-bin.zip
+JBOSS_File: amq-broker-7.4.1-bin.zip
+
+Java_Url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/Java/Open%20JDK%2011/
+Java_File: OpenJDK11U-jdk_x64_linux_11.0.6_10.tar.gz
+###################################################################################
+## Installation path setup
+Edifecs_Build_PATH: /opt/EdifecsBuild
+Edifecs_Build_HF_PATH: /opt/EdifecsBuild/HF
+Edifecs_Install_Dir: /opt/Edifecs
+JBOSS_Shared_PATH: /opt/data
+
+XE_Folders:
+- XEngine
+- XEServer
+- EAM
+
+###################################################################################

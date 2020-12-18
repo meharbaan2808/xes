@@ -1,0 +1,61 @@
+---
+ - name: Download Edifecs XE,XES,XEConnect and EAM
+   hosts: demo
+   vars_files:
+   - env_variables 
+   
+   tasks:
+   - name: Create Edifecs build folder {{Edifecs_Build_Path}}
+     file:
+       path: "{{ Edifecs_Build_HF_PATH }}"
+       state: directory
+       mode: '0755'
+
+   - name: Create subfolders under Edifecs build folder
+     file:
+       path: "{{ Edifecs_Build_HF_PATH }}/{{ item }}"
+       state: directory
+       mode: '0755'
+     with_items: "{{ XE_Folders }}"
+
+   - name: Download packages for XEngine, XServer & EAM from SVN
+     get_url:
+       url: "{{ vars[item + '_HF_Url']}}"
+       dest: "{{Edifecs_Build_HF_PATH}}/{{item}}/{{vars[item + '_HF_File']}}"
+       validate_certs: false
+       mode: '0755' 
+     with_items: "{{ XE_Folders }}"
+
+   - name: Untar XEngine HF
+     unarchive:
+       src: "{{Edifecs_Build_HF_PATH}}/XEngine/{{XEngine_HF_File}}"
+       dest: "{{Edifecs_Build_HF_PATH}}/XEngine"
+       remote_src: yes
+
+   - name: Install XEngine HF
+     shell: "bash -lc ./XEngineHotfixInstaller"
+     register: xe_output
+     args:
+       chdir: "{{Edifecs_Build_HF_PATH}}/XEngine"
+
+   - debug:
+       var: xe_output
+
+   - name: Install XEServer HF
+     shell: "source /home/administrator-vm/.bash_profile && java -jar xes-hotfix-9.1.0.5.jar"
+     register: xes_output
+     args:
+       chdir: "{{Edifecs_Build_HF_PATH}}/XEServer"
+
+   - debug:
+       var: xes_output
+
+   - name: Install EAM HF
+     shell: "source /home/administrator-vm/.bash_profile && java -jar eam-hotfix-9.1.0.6.jar"
+     register: eam_output
+     args:
+       chdir: "{{Edifecs_Build_HF_PATH}}/EAM"
+
+   - debug:
+       var: eam_output
+

@@ -1,0 +1,51 @@
+---
+ - name: Download TM package and copy configuration files
+   hosts: demo
+   vars_files:
+   - env_variables
+
+   tasks:
+   - name: Create Edifecs TM build folder {{Edifecs_Build_Path}}/TM
+     file:
+       path: "{{ Edifecs_Build_PATH }}/TM"
+       state: directory
+       mode: '0755'
+
+   - name: Download packages for TM from SVN
+     get_url:
+       url: "{{ TM_Url}}"
+       dest: "{{Edifecs_Build_PATH}}/TM/{{ TM_File }}"
+       validate_certs: false
+       mode: '0755'
+ 
+   - name: Unarchive the TM package
+     unarchive:
+       src: "{{Edifecs_Build_PATH}}/TM/{{ TM_File }}"
+       dest: "{{Edifecs_Build_PATH}}/TM/"
+       remote_src: yes
+
+   - name: Download TM license file from SVN
+     get_url:
+       url: "{{ TM_License}}"
+       dest: "{{Edifecs_Build_PATH}}/TM/license/license.lic"
+       validate_certs: false
+       backup: yes
+       mode: '0755'
+
+   - name: Copy config.xml & DBproperties.conf
+     copy:
+       src: "{{ item }}"
+       dest: "{{Edifecs_Build_PATH }}/TM"
+       mode: '0777'
+       backup: yes
+     with_items:
+      - conf/config.xml
+      - conf/DBProperties.conf
+
+   - name: Give execute permission to config.dtd
+     file:
+       path: "{{Edifecs_Build_PATH}}/TM/{{item}}"
+       mode: '0755' 
+     with_items:
+      - config.dtd
+      - install.sh

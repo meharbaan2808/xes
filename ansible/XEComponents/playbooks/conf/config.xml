@@ -1,0 +1,1333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE config SYSTEM "config.dtd">
+<config version="9.0.0.5">
+<!-- Specifies the configuration to use. -->
+<use-configuration>Distributed</use-configuration>
+<configuration name="Distributed">
+
+
+<computer name="CS-DAMANDEVAP1">
+<RMI>
+<RegistryPort>1090</RegistryPort>
+<ServicePorts from="" to=""/>
+</RMI>
+<!--<application name="WebApp" type="webapp">
+<appserver description="TOMCAT or GenericWAR" type="TOMCAT">
+<property description="Indicates Tomcat location. Required property." name="location">
+<value>/opt/Tomcat/apache-tomcat-9.0.24</value>
+</property>
+<property description="Indicates the webapp context. Optional property." name="webcontext">
+<value>tm</value>
+</property>
+<property description="Indicates the webserver port. Defaults to 80." name="port">
+<value>8080</value>
+</property> -->
+<!-- <property name="app.public.url" description="TM Web application public URL. Used by the client: Browser->(GET)->(app.public.url)"> <value>http://localhost:8080/tm</value> </property> -->
+<!--SAML Configuration -->
+<!-- <property description="Set the samlConfigFile property only if SAML authentication is required" name="samlConfigFile"> <value>SSO/SAML/saml.properties</value> </property> -->
+<!--LDAP Configuration -->
+<!-- <property name="ldapConfigFile" description="Set the ldapConfigFile property for TM, only if LDAP authentication is required"> <value>SSO/LDAP/ldap.properties</value> </property> -->
+<!--</appserver>
+</application> -->
+
+<application name="configserver" type="tm-config-server">
+<property name="KeyStoreLocation">
+<value>config-server/config/tm_certs.jks</value>
+</property>
+<property name="KeyStorePassword" type="encrypted">
+<value>ezCdBPhaAF4ofRD82e/Ibg==</value>
+</property>
+<property name="ServerPort">
+<value>8989</value>
+</property>
+</application>
+
+
+<application name="ServiceManager" type="servicemanager">
+<services>
+ <!-- For each application maximum one File Store service is allowed.
+ A Slave File Store service must have property IsMaster=false.
+ For non Windows platforms the RepositoryLocation property is required too.-->
+<service name="File Store Service">
+<property name="IsMaster">
+<value>true</value>
+</property>
+<property name="RepositoryLocation">
+<value>/opt/data/FileRepository</value>
+</property>
+</service>
+<!-- Master File Store service, maximum one per configuration. -->
+
+<!--<service caption="HTR File Repository Service" name="File Store Service">                    
+Optional property to indicate a remote repository folder.
+<property name="RepositoryLocation">
+<value>/opt/data/FileRepository</value>
+</property> 
+Optional property to indicate the default file repository domain.
+<property name="DefaultDomain">
+<value>TransmissionFiles</value>
+</property>
+</service>
+
+					
+<service caption="HTR File Repository Archive Service" name="File Store Archive Service"/>
+
+<service caption="HTR File Repository Purge Service" name="File Store Purge Service"/>
+
+<service name="Htr Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>-->
+
+<service name="GBD File Repository Service">
+ <!--  Optional property to indicate a remote repository folder.-->
+<property name="RepositoryLocation">
+<value>/opt/data/GBDRepository</value>
+</property> 
+<!--  Optional property to indicate the default file repository domain.-->
+<property name="DefaultDomain">
+<value>TransmissionFiles</value>
+</property> 
+<!-- <property name="IsMaster">
+<value>false</value>
+</property> -->
+</service>
+
+<service name="GBD File Repository Archive Service"/>
+
+<service name="GBD File Repository Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+<!--Tpm Synchronization Service, maximum one per configuration-->
+
+<service caption="TPM Synchronization Service" name="TpmSynchronizationService"/>
+
+<service name="Attachment Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+<!-- RetentionPolicy value format: ItemType: report type = retention period Where ItemType - Name from EcEnablement..ECuItemDefinition Report type - Caption from EcEnablement..enAttachmentUsage retention period - in days (d), months (m), years (y). -->
+<!-- <property name="RetentionPolicy"> <value>Transmission: Inbound Ldns XML Report = 30d</value> <value>Transmission: Inbound Error XML Report = 30d</value> </property> -->
+</service>
+
+<service name="DataExporter Service">
+<property name="ThreadsCount">
+<value>1</value>
+</property>
+<property name="JMS.Queue.DataExport">
+<value>TM_DataExport</value>
+</property>
+</service>
+
+<service name="Notification Scheduler Task">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+
+<service name="Update Partner Status Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+
+<service name="Business Rules Engine">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+<!-- Datamart service to load business document datamart, maximum one per configuration. -->
+
+<service caption="DataMart Business Document Service" name="DataMartBusinessDocumentService">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+<!-- Datamart service to load Validation error datamart, maximum one per configuration. -->
+
+<!--<service caption="DataMart Validation Error Service" name="DataMartValidationErrorService">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>-->
+
+<service name="Item Delete Service"/>
+<!-- GBD Retry Loader Service to load by matching External ID to Repository -->
+
+<service caption="GBD TrackingInfo Loader Service" name="GBD Retry Loader Service">
+<property name="MaxRetryAttempts">
+<value>10</value>
+</property>
+<property name="ActionInterval">
+<value>300000</value>
+</property>
+</service>
+<!-- TI Processor services required for HTR_BATCH mode -->
+
+<!--<service caption="HTR TrackingInfo Identification Service" name="TrackingInfo Identification Service"/>
+
+<service caption="HTR TrackingInfo Loader Service" name="TrackingInfo Loader Service"/>
+
+<service caption="HTR TrackingInfo Notification Service" name="TrackingInfo Notification Service"/>
+
+<service caption="GBD TrackingInfo Notification Service" name="GBDInfo Notification Service"/>-->
+
+<service caption="TPM Audit Retention Service" name="TpmAuditRetentionService">
+<property name="ActionInterval">
+<value>86400000</value>
+<!--every day -->
+</property>
+<property name="KeepRecordsThreshold">
+<value>31</value>
+</property>
+</service>
+
+<service caption="Partner Notification Service" name="PartnerNotificationService">
+<property name="ActionInterval">
+<value>120000</value>
+<!--every 120 sec -->
+</property>
+</service>
+
+<service caption="Workflow Runtime Service" name="Workflow Service">
+<property name="HTTPPort">
+<value>8086</value>
+</property>
+<property name="ContextPath">
+<value>taskmgmt</value>
+</property>
+</service>
+
+<service name="Workflow Starting Service">
+<property name="ActionInterval">
+<value>10000</value>
+<!-- 10 seconds of action interval -->
+</property>
+<property name="BatchCount">
+<value>20</value>
+</property>
+<property name="ThreadsCount">
+<value>2</value>
+</property>
+</service>
+</services>
+</application>
+<!--<TmAgent> <RunningPort>8091</RunningPort> <StopPort>8092</StopPort> </TmAgent>-->
+
+<application name="BIService" type="servicemanager">
+<services>
+<service name="Business Item Service">
+<property name="HTTPPort">
+<value>8085</value>
+</property>
+<property name="ContextPath">
+<value>biservice</value>
+</property>
+<property name="MaxDBAttachmentSize"> 
+<value>102400</value>
+</property>
+</service>
+</services>
+</application>
+
+<application name="SDK" type="sdk"/>
+
+<application name="XES" type="xes">
+<property name="JMS.Queue.Package">
+<value>TM_ETL_Package</value>
+</property>
+<property name="JMS.Queue.Event">
+<value>TM_XES_Event</value>
+</property>
+<property name="JMS.Queue.TrackingInfo">
+<value>TM_XES_TrackingInfo_In</value>
+</property>
+<property name="MaxRuntimePackageSize">
+<value>100000</value>
+</property>
+<!-- Indicates where XES / TM Route creates external ETL packages. -->
+<property name="EtlPackageLocation">
+<value>/opt/data/tm-etl-package</value>
+</property>
+<!-- Indicates the shared location from where ETL services access external packages. The ETL service needs read/write permissions to this shared folder. -->
+<property name="EtlPackageSharedLocation">
+<value>/opt/data/tm-etl-package</value>
+</property>
+<property name="TM_Search_Service_es_backup_location">
+<value>/opt/data/TM/SearchRepo/BackUp</value>
+</property>
+<!-- Indicates the shared location from where Member Indexing access packages.-->
+<property name="TMMI_PackageLocation">
+<value>/opt/data/TM/MemberIndexing/InboundPackages</value>
+</property>
+<profiles>
+<profile httpPort="9383" httpsPort="9436" name="TM">
+<property name="JMS.Queue.DataExport">
+<value>TM_DataExport</value>
+</property>
+<property name="TMDataExport_DataStorage_JDBC_URL">
+<value>jdbc:h2:file:DS/data</value>
+</property>
+<property name="TMDataExport_DataStorage_Expiration">
+<value>1728000000</value>
+</property>
+<property name="TMDataExport_EmailFrom">
+<value>dataexport@yourorg.com</value>
+</property> 
+</profile>
+
+<profile name="TMResubmission" template="TMResubmission">
+<property name="JMS.Queue.Package.Resubmission">
+<value>TM_ETL_Package_Resubmission</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_ETL_Package_Invalid</value>
+</property>
+<property name="EtlRecoveryFolder">
+<value>${XESProfile}/workspace/tm/etl-recovery</value>
+</property>
+<property name="MaxResubmissionRetryCount">
+<value>5</value>
+</property>
+</profile>
+<profile name="TrackingInfoProcessor" template="TrackingInfoProcessor">
+<property name="JMS.Queue.TrackingInfo.Failed">
+<value>TM_XES_TrackingInfo_Failed</value>
+</property>
+<property name="JMS.Queue.TrackingInfo.Invalid">
+<value>TM_XES_TrackingInfo_Invalid</value>
+</property>
+</profile>
+<profile name="TM_Archive"> 
+<property name="TM_Archive_context_path">
+<value>/archive</value> </property> 
+<property name="TM_Archive_port"> 
+<value>9102</value> 
+</property> 
+<property name="TM_Archive_filestore_path"> 
+<value>
+/opt/Data/TM/Archive/FileStore
+</value> 
+</property> 
+<property name="TM_Archive_es_embedded_path"> 
+<value>
+/opt/Data/TM/Archive/Index
+</value> 
+</property> 
+<property name="TM_Archive_purge_conf_path">
+<value/> 
+</property> 
+<property name="TM_Archive_purge_cron"> 
+<value>0 0 0 * * SUN</value> 
+</property> 
+<jvmArgs> 
+-Xms2g 
+-Xmx2g 
+-Djava.awt.headless=true 
+-Djava.net.preferIPv4Stack=true 
+</jvmArgs> 
+</profile> 
+<!--<profile name="TM_Archiver_HTR"> <property name="TM_Archiver_etl_cron"> <value>0 0 1 * * ?</value> </property> <property name="TM_Archiver_etl_endTime"> <value>5:00 AM</value> </property> <jvmArgs> -Xms1g -Xmx6g -Xrs -XX:NewRatio=2 -XX:SurvivorRatio=8 -XX:SoftRefLRUPolicyMSPerMB=500 </jvmArgs> </profile> -->
+<profile name="TM_Archiver_GBD">
+<property name="TM_Archiver_etl_cron"> 
+<value>0 0 2 * * ?</value> 
+</property> 
+<property name="TM_Archiver_etl_endTime"> 
+<value>4:00 AM</value> 
+</property> 
+<jvmArgs> 
+-Xmx6g 
+-Xrs 
+-XX:NewRatio=2 
+-XX:SurvivorRatio=8 
+</jvmArgs> 
+</profile>
+
+<profile name="TM_Search_Service">
+<property name="TM_Search_Service_context_path">
+<value>/search</value>
+</property>
+<property name="TM_Search_Service_port">
+<value>9101</value>
+</property>
+<property name="TM_Search_Service_es_embedded_path">
+<value>/opt/Data/TM/SearchRepo/Index</value>
+</property>
+<property name="TM_Search_Service_es_embedded_port">
+<value>9300</value>
+</property>
+<jvmArgs> 
+-Xms3g 
+-Xmx3g 
+-Djava.awt.headless=true 
+-Djava.net.preferIPv4Stack=true 
+</jvmArgs>
+</profile>
+
+<profile name="TM_JOBS">
+<jvmArgs> -Xmx2g </jvmArgs>
+</profile>
+<!--<profile name="TM_Search_IndexerHTR">
+<jvmArgs> -Xmx1g </jvmArgs>
+</profile>-->
+<profile name="TM_Search_IndexerGBD">
+<jvmArgs> -Xmx3g </jvmArgs>
+</profile>
+<!--<profile name="TM_Graph_DB">
+<property name="TM_Graph_DB_port">
+<value>2424</value>
+</property>
+<property name="TM_Graph_DB_database_path">
+<value>/opt/Data/TM/Graph/databases/</value>
+</property>
+<property name="TM_Graph_DB_user">
+<value>tmuser</value>
+</property>
+<property name="TM_Graph_DB_password">
+<value>manager</value>
+</property>
+<property name="TM_Graph_DB_root_password">
+<value>manager</value>
+</property>
+<property name="TM_Graph_DB_backup_dir">
+<value>/opt/Data/TM/Graph/backup</value>
+</property>
+(time format: HH:mm:ss) 
+Note: In current version an automatic backup will be triggered at server start if the restart occurs later than "TM_Graph_DB_backup_firsttime"
+<property name="TM_Graph_DB_backup_firsttime">
+<value>23:00:00</value>
+</property>
+<jvmArgs> -Xmx1G -server -XX:+AggressiveOpts -XX:CompileThreshold=200 -XX:MaxDirectMemorySize=512g </jvmArgs>
+</profile>-->
+</profiles>
+</application>
+<application name="DBSelector" type="xe-selector"/>
+
+<application name="ETLBirthCertificate" type="servicemanager">
+ <services>
+<service name="JMSEtlProcessor">
+<property name="ThreadsCount">
+<value>8</value>
+</property>
+<property name="JMS.Queue.Package">
+<value>TM_BirthCertificate_ETL_Package</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_BirthCertificate_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_BirthCertificate_ETL_Package_Invalid</value>
+</property>
+<property name="JMS.Queue.Package.DataIndexer">
+<value>TM_BirthCertificate_DI_Package</value>
+</property>
+</service>
+
+<service name="DataIndexerProcessor">
+<property name="ThreadsCount">
+<value>8</value>
+</property>
+<property name="JMS.Queue.DataIndexer">
+<value>TM_BirthCertificate_DI_Package</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Failed">
+<value>TM_BirthCertificate_DI_Package_Failed</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Invalid">
+<value>TM_BirthCertificate_DI_Package_Invalid</value>
+</property>
+</service>
+<service name="ID Provider Service">
+<property name="JMXPort">
+<value>5682</value>
+</property>
+</service>
+<service name="XES Event Consumer Service">
+<property name="ThreadsCount">
+<value>8</value>
+</property>
+<property name="JMS.Queue.Event">
+<value>TM_BirthCertificate_XES_Event</value>
+</property>
+<property name="JMS.Queue.Event.Failed">
+<value>TM_BirthCertificate_XES_Event_Failed</value>
+</property>
+<property name="JMS.Queue.Event.Invalid">
+<value>TM_BirthCertificate_XES_Event_Invalid</value>
+</property>
+</service>
+</services>
+</application>
+
+
+<application name="ETL" type="servicemanager">
+<services>
+
+<service caption="ETL Service" name="JMSEtlProcessor">
+<!-- "ThreadsCount" property for the "JMSEtlProcessor" service should have the same value as "ThreadsCount" property for the "DataIndexerProcessor" service -->
+<property name="ThreadsCount">
+<value>20</value>
+</property>
+<property name="JMS.Queue.Package">
+<value>TM_ETL_Package</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_ETL_Package_Invalid</value>
+</property>
+<property name="JMS.Queue.Package.DataIndexer">
+<value>TM_DI_Package</value>
+</property>
+</service>
+
+<service caption="Data Indexer Service" name="DataIndexerProcessor">
+<!-- "ThreadsCount" property for the "DataIndexerProcessor" service should have the same value as "ThreadsCount" property for the "JMSEtlProcessor" service -->
+<property name="ThreadsCount">
+<value>20</value>
+</property>
+<property name="JMS.Queue.DataIndexer">
+<value>TM_DI_Package</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Failed">
+<value>TM_DI_Package_Failed</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Invalid">
+<value>TM_DI_Package_Invalid</value>
+</property>
+</service>
+
+<service caption="HTR ID Provider Service" name="ID Provider Service">
+<property name="JMXPort">
+<value>5678</value>
+</property>
+</service>
+<service caption="ETL Event Consumer Service" name="XES Event Consumer Service">
+<property name="ThreadsCount">
+<value>20</value>
+</property>
+<property name="JMS.Queue.Event">
+<value>TM_XES_Event</value>
+</property>
+<property name="JMS.Queue.Event.Failed">
+<value>TM_XES_Event_Failed</value>
+</property>
+<property name="JMS.Queue.Event.Invalid">
+<value>TM_XES_Event_Invalid</value>
+</property>
+</service>
+</services>
+</application>
+
+
+<application name="ETLResubmission" type="servicemanager">
+<services>
+<service caption="ETL Resubmission Service" name="JMSEtlProcessor Resubmission">
+<property name="JMS.Queue.Package.Resubmission">
+<value>TM_ETL_Package_Resubmission</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_ETL_Package_Invalid</value>
+</property>
+<property name="JMS.Queue.Package.DataIndexer">
+<value>TM_DI_Package</value>
+</property>
+<property name="MaxEtlAttemptCount">
+<value>3</value>
+</property>
+</service>
+</services>
+</application>
+</computer>
+
+<computer name="CS-DAMANDEVAP2">
+<RMI>
+<RegistryPort>1090</RegistryPort>
+<ServicePorts from="" to=""/>
+</RMI>
+<!-- The Web App will be installed in %TomcatHome%/webapps/[webcontext] folder. -->
+<!-- <application name="WebApp" type="webapp">
+<appserver description="TOMCAT or GenericWAR" type="TOMCAT">
+<property description="Indicates Tomcat location. Required property." name="location">
+<value>/opt/apache-tomcat-9.0.24</value>
+</property>
+<property description="Indicates the webapp context. Optional property." name="webcontext">
+<value>tm</value>
+</property>
+<property description="Indicates the webserver port. Defaults to 80." name="port">
+<value>8080</value>
+</property> -->
+<!-- <property name="app.public.url" description="TM Web application public URL. Used by the client: Browser->(GET)->(app.public.url)"> <value>http://localhost:8080/tm</value> </property> -->
+<!--SAML Configuration -->
+<!-- <property description="Set the samlConfigFile property only if SAML authentication is required" name="samlConfigFile"> <value>SSO/SAML/saml.properties</value> </property> -->
+<!--LDAP Configuration -->
+<!-- <property name="ldapConfigFile" description="Set the ldapConfigFile property for TM, only if LDAP authentication is required"> <value>SSO/LDAP/ldap.properties</value> </property> -->
+<!-- </appserver>
+</application> -->
+<application name="SDK" type="sdk"/>
+<application name="SecondaryServiceManager1" type="servicemanager">
+<services>
+<!-- Master File Store service, maximum one per configuration. -->
+<service name="File Store Service">
+<property name="IsMaster">
+<value>false</value>
+</property>
+<property name="RepositoryLocation">
+<value>/opt/data/FileRepository</value>
+</property>
+</service>
+<!--<service caption="HTR File Repository Service" name="File Store Service">  -->                  
+<!--  Optional property to indicate a remote repository folder.-->
+<!--<property name="RepositoryLocation">
+<value>/opt/data/FileRepository</value>
+</property> -->
+<!--  Optional property to indicate the default file repository domain.-->
+<!--<property name="DefaultDomain">
+<value>TransmissionFiles</value>
+</property>
+</service>-->
+ <!-- For each application maximum one File Store service is allowed.
+ A Slave File Store service must have property IsMaster=false.
+ For non Windows platforms the RepositoryLocation property is required too.-->
+					
+<!--<service caption="HTR File Repository Archive Service" name="File Store Archive Service"/>
+
+<service caption="HTR File Repository Purge Service" name="File Store Purge Service"/>
+
+<service name="Htr Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>-->
+
+<!--<service name="GBD File Repository Service">-->
+ <!--  Optional property to indicate a remote repository folder.-->
+<!--<property name="RepositoryLocation">
+<value>/opt/data/GBDRepository</value>
+</property> -->
+<!--  Optional property to indicate the default file repository domain.-->
+<!--<property name="DefaultDomain">
+<value>TransmissionFiles</value>
+</property> -->
+<!-- <property name="IsMaster">
+<value>false</value>
+</property> -->
+<!--</service>-->
+
+<service name="GBD File Repository Archive Service"/>
+
+<service name="GBD File Repository Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+<!--Tpm Synchronization Service, maximum one per configuration-->
+
+<!--<service caption="TPM Synchronization Service" name="TpmSynchronizationService"/>-->
+
+<service name="Attachment Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+<!-- RetentionPolicy value format: ItemType: report type = retention period Where ItemType - Name from EcEnablement..ECuItemDefinition Report type - Caption from EcEnablement..enAttachmentUsage retention period - in days (d), months (m), years (y). -->
+<!-- <property name="RetentionPolicy"> <value>Transmission: Inbound Ldns XML Report = 30d</value> <value>Transmission: Inbound Error XML Report = 30d</value> </property> -->
+</service>
+
+<service name="DataExporter Service">
+<property name="ThreadsCount">
+<value>1</value>
+</property>
+<property name="JMS.Queue.DataExport">
+<value>TM_DataExport</value>
+</property>
+</service>
+
+<service name="Notification Scheduler Task">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+
+<service name="Update Partner Status Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+
+<service name="Business Rules Engine">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+<!-- Datamart service to load business document datamart, maximum one per configuration. -->
+
+<!--<service caption="DataMart Business Document Service" name="DataMartBusinessDocumentService">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>-->
+<!-- Datamart service to load Validation error datamart, maximum one per configuration. -->
+
+<service caption="DataMart Validation Error Service" name="DataMartValidationErrorService">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+</service>
+
+<service name="Item Delete Service"/>
+<!-- GBD Retry Loader Service to load by matching External ID to Repository -->
+
+<service caption="GBD TrackingInfo Loader Service" name="GBD Retry Loader Service">
+<property name="MaxRetryAttempts">
+<value>10</value>
+</property>
+<property name="ActionInterval">
+<value>300000</value>
+</property>
+</service>
+<!-- TI Processor services required for HTR_BATCH mode -->
+
+<service caption="HTR TrackingInfo Identification Service" name="TrackingInfo Identification Service"/>
+
+<service caption="HTR TrackingInfo Loader Service" name="TrackingInfo Loader Service"/>
+
+<service caption="HTR TrackingInfo Notification Service" name="TrackingInfo Notification Service"/>
+
+<service caption="GBD TrackingInfo Notification Service" name="GBDInfo Notification Service"/>
+
+<service caption="TPM Audit Retention Service" name="TpmAuditRetentionService">
+<property name="ActionInterval">
+<value>86400000</value>
+<!--every day -->
+</property>
+<property name="KeepRecordsThreshold">
+<value>31</value>
+</property>
+</service>
+
+<service caption="Partner Notification Service" name="PartnerNotificationService">
+<property name="ActionInterval">
+<value>120000</value>
+<!--every 120 sec -->
+</property>
+</service>
+
+<!--<service caption="Workflow Runtime Service" name="Workflow Service">
+<property name="HTTPPort">
+<value>8086</value>
+</property>
+<property name="ContextPath">
+<value>taskmgmt</value>
+</property>
+</service>-->
+
+<service name="Workflow Starting Service">
+<property name="ActionInterval">
+<value>10000</value>
+<!-- 10 seconds of action interval -->
+</property>
+<property name="BatchCount">
+<value>20</value>
+</property>
+<property name="ThreadsCount">
+<value>2</value>
+</property>
+</service>
+</services>
+</application>
+<!--<TmAgent> <RunningPort>8091</RunningPort> <StopPort>8092</StopPort> </TmAgent>-->
+
+<application name="BIService" type="servicemanager">
+<services>
+<service name="Business Item Service">
+<property name="HTTPPort">
+<value>8085</value>
+</property>
+<property name="ContextPath">
+<value>biservice</value>
+</property>
+<property name="MaxDBAttachmentSize"> 
+<value>102400</value>
+</property>
+</service>
+</services>
+</application>
+
+
+<application name="ETLBirthCertificate" type="servicemanager">
+ <services>
+<service name="JMSEtlProcessor">
+<property name="ThreadsCount">
+<value>8</value>
+</property>
+<property name="JMS.Queue.Package">
+<value>TM_BirthCertificate_ETL_Package</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_BirthCertificate_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_BirthCertificate_ETL_Package_Invalid</value>
+</property>
+<property name="JMS.Queue.Package.DataIndexer">
+<value>TM_BirthCertificate_DI_Package</value>
+</property>
+</service>
+
+<service name="DataIndexerProcessor">
+<property name="ThreadsCount">
+<value>8</value>
+</property>
+<property name="JMS.Queue.DataIndexer">
+<value>TM_BirthCertificate_DI_Package</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Failed">
+<value>TM_BirthCertificate_DI_Package_Failed</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Invalid">
+<value>TM_BirthCertificate_DI_Package_Invalid</value>
+</property>
+</service>
+<service name="ID Provider Service">
+<property name="JMXPort">
+<value>5682</value>
+</property>
+</service>
+<service name="XES Event Consumer Service">
+<property name="ThreadsCount">
+<value>8</value>
+</property>
+<property name="JMS.Queue.Event">
+<value>TM_BirthCertificate_XES_Event</value>
+</property>
+<property name="JMS.Queue.Event.Failed">
+<value>TM_BirthCertificate_XES_Event_Failed</value>
+</property>
+<property name="JMS.Queue.Event.Invalid">
+<value>TM_BirthCertificate_XES_Event_Invalid</value>
+</property>
+</service>
+</services>
+</application>
+
+
+<application name="ETL" type="servicemanager">
+<services>
+
+<service caption="ETL Service" name="JMSEtlProcessor">
+<!-- "ThreadsCount" property for the "JMSEtlProcessor" service should have the same value as "ThreadsCount" property for the "DataIndexerProcessor" service -->
+<property name="ThreadsCount">
+<value>20</value>
+</property>
+<property name="JMS.Queue.Package">
+<value>TM_ETL_Package</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_ETL_Package_Invalid</value>
+</property>
+<property name="JMS.Queue.Package.DataIndexer">
+<value>TM_DI_Package</value>
+</property>
+</service>
+
+<service caption="Data Indexer Service" name="DataIndexerProcessor">
+<!-- "ThreadsCount" property for the "DataIndexerProcessor" service should have the same value as "ThreadsCount" property for the "JMSEtlProcessor" service -->
+<property name="ThreadsCount">
+<value>20</value>
+</property>
+<property name="JMS.Queue.DataIndexer">
+<value>TM_DI_Package</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Failed">
+<value>TM_DI_Package_Failed</value>
+</property>
+<property name="JMS.Queue.DataIndexer.Invalid">
+<value>TM_DI_Package_Invalid</value>
+</property>
+</service>
+
+<service caption="HTR ID Provider Service" name="ID Provider Service">
+<property name="JMXPort">
+<value>5678</value>
+</property>
+</service>
+<service caption="ETL Event Consumer Service" name="XES Event Consumer Service">
+<property name="ThreadsCount">
+<value>20</value>
+</property>
+<property name="JMS.Queue.Event">
+<value>TM_XES_Event</value>
+</property>
+<property name="JMS.Queue.Event.Failed">
+<value>TM_XES_Event_Failed</value>
+</property>
+<property name="JMS.Queue.Event.Invalid">
+<value>TM_XES_Event_Invalid</value>
+</property>
+</service>
+</services>
+</application>
+
+
+<application name="ETLResubmission" type="servicemanager">
+<services>
+<service caption="ETL Resubmission Service" name="JMSEtlProcessor Resubmission">
+<property name="JMS.Queue.Package.Resubmission">
+<value>TM_ETL_Package_Resubmission</value>
+</property>
+<property name="JMS.Queue.Package.Failed">
+<value>TM_ETL_Package_Failed</value>
+</property>
+<property name="JMS.Queue.Package.Invalid">
+<value>TM_ETL_Package_Invalid</value>
+</property>
+<property name="JMS.Queue.Package.DataIndexer">
+<value>TM_DI_Package</value>
+</property>
+<property name="MaxEtlAttemptCount">
+<value>3</value>
+</property>
+</service>
+</services>
+</application>
+</computer>
+
+<computer name="CS-DAMANDEVXE1">
+<RMI>
+<RegistryPort>1090</RegistryPort>
+<ServicePorts from="" to=""/>
+</RMI>
+<!--<TmAgent> <RunningPort>8091</RunningPort> <StopPort>8092</StopPort> </TmAgent>-->
+<application name="WebApp" type="webapp">
+<appserver description="TOMCAT or GenericWAR" type="TOMCAT">
+<property description="Indicates Tomcat location. Required property." name="location">
+<value>/opt/Edifecs/Tomcat/apache-tomcat-9.0.24</value>
+</property>
+<property description="Indicates the webapp context. Optional property." name="webcontext">
+<value>tm</value>
+</property>
+<property description="Indicates the webserver port. Defaults to 80." name="port">
+<value>8080</value>
+</property>
+<!-- <property name="app.public.url" description="TM Web application public URL. Used by the client: Browser->(GET)->(app.public.url)"> <value>http://localhost:8080/tm</value> </property> -->
+<!--SAML Configuration -->
+<!-- <property description="Set the samlConfigFile property only if SAML authentication is required" name="samlConfigFile"> <value>SSO/SAML/saml.properties</value> </property> -->
+<!--LDAP Configuration -->
+<!-- <property name="ldapConfigFile" description="Set the ldapConfigFile property for TM, only if LDAP authentication is required"> <value>SSO/LDAP/ldap.properties</value> </property> -->
+</appserver>
+</application>
+<application name="ServiceManager" type="servicemanager">
+<services>
+<service name="Attachment Purge Service">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+<!-- RetentionPolicy value format: ItemType: report type = retention period Where ItemType - Name from EcEnablement..ECuItemDefinition Report type - Caption from EcEnablement..enAttachmentUsage retention period - in days (d), months (m), years (y). -->
+<!-- <property name="RetentionPolicy"> <value>Transmission: Inbound Ldns XML Report = 30d</value> <value>Transmission: Inbound Error XML Report = 30d</value> </property> -->
+</service>
+
+<service caption="HTR Web Upload File Drop Service" name="XEServer Drop File Service">
+
+
+<property name="TMInboundDir">
+
+<value>${XESRoot}/profiles/TM/workspace/tm/inbound/native_inbound_batch</value>
+
+</property>
+
+
+<property name="TMOutboundDir">
+
+<value>${XESRoot}/profiles/TM/workspace/tm/outbound/native_outbound_batch</value>
+
+</property>
+
+</service>
+
+
+<service caption="GBD Web Upload File Drop Service" name="XEServer Drop File Service GBD">
+<property name="Startup">
+<value>Disabled</value>
+</property>
+<property name="TMInboundDir">
+<value>/opt/Edifecs/TMAskPortal/Inbound/Batch</value>
+</property>
+<property name="TMOutboundDir">
+<value>/opt/Edifecs/TMAskPortal/Outbound/Batch</value>
+</property>
+</service>
+
+<service caption="Guideline Display Service" name="Guideline Service"/>
+
+<service caption="Guideline Loader Service" name="ETL Guideline Loader"/>
+</services>
+<!-- <service name="Workflow Service"> <property name="HTTPPort"> <value>8086</value> </property> <property name="ContextPath"> <value>taskmgmt</value> </property> For each application maximum one Workflow service is allowed. A Slave Workflow service must have property IsMaster=false. <property name="IsMaster"> <value>false</value> </property> </service> <service name="Workflow Starting Service"> <property name="ActionInterval"> <value>10000</value> </property> <property name="BatchCount"> <value>20</value> </property> <property name="ThreadsCount"> <value>1</value> </property> </service> -->
+</application>
+
+<application name="SDK" type="sdk"/>
+ <application name="XES" type="xes">
+                <property name="JMS.Queue.Package">
+                    <value>TM_ETL_Package</value>
+                </property>
+                <property name="JMS.Queue.Event">
+                    <value>TM_XES_Event</value>
+                </property>
+                <property name="JMS.Queue.TrackingInfo">
+                    <value>TM_XES_TrackingInfo_In</value>
+                </property>
+                <property name="MaxRuntimePackageSize">
+                    <value>100000</value>
+                </property>
+                <!-- Indicates where XES / TM Route creates external ETL packages. -->
+                <property name="EtlPackageLocation">
+                    <value>/opt/data/tm-etl-package</value>
+                </property>
+                <!-- Indicates the shared location from where ETL services access external packages.
+                     The ETL service needs read/write permissions to this shared folder. -->
+                <property name="EtlPackageSharedLocation">
+                    <value>/opt/data/tm-etl-package</value>
+                </property>
+		        <property name="TM_Search_Service_es_backup_location">
+                    <value>/opt/data/TM/SearchRepo/BackUp</value>
+                </property>
+                <!-- Indicates the shared location from where Member Indexing access packages.-->
+                <property name="TMMI_PackageLocation">
+                    <value>/opt/data/TM/MemberIndexing/InboundPackages</value>
+                </property>
+				 <profiles>
+                    <profile httpPort="9383" name="TM">
+                        <property name="JMS.Queue.DataExport">
+                            <value>TM_DataExport</value>
+                        </property>
+                        <property name="TMDataExport_DataStorage_JDBC_URL">
+                            <value>jdbc:h2:file:DS/data</value>
+                        </property>
+                        <property name="TMDataExport_DataStorage_Expiration">
+                            <value>1728000000</value>
+                        </property>
+                        <property name="TMDataExport_EmailFrom">
+                            <value>dataexport@yourorg.com</value>
+                        </property>
+                    </profile>
+					<profile name="TrackingInfoProcessor" template="TrackingInfoProcessor">
+                        <property name="JMS.Queue.TrackingInfo.Failed">
+                            <value>TM_XES_TrackingInfo_Failed</value>
+                        </property>
+                        <property name="JMS.Queue.TrackingInfo.Invalid">
+                            <value>TM_XES_TrackingInfo_Invalid</value>
+                        </property>
+                    </profile>
+					 <profile name="TMResubmission" template="TMResubmission">
+                        <property name="JMS.Queue.Package.Resubmission">
+                            <value>TM_ETL_Package_Resubmission</value>
+                        </property>
+                        <property name="JMS.Queue.Package.Failed">
+                            <value>TM_ETL_Package_Failed</value>
+                        </property>
+                        <property name="JMS.Queue.Package.Invalid">
+                            <value>TM_ETL_Package_Invalid</value>
+                        </property>
+                        <property name="EtlRecoveryFolder">
+                            <value>${XESProfile}/workspace/tm/etl-recovery</value>
+                        </property>
+                        <property name="MaxResubmissionRetryCount">
+                            <value>5</value>
+                        </property>
+                    </profile>
+		</profiles>
+            </application>
+	<application name="DBSelector" type="xe-selector"/>	
+	</computer>		
+<!-- The installer will configure the DB selector if it is a fresh install or if you reconfigure an installed TM. If you upgrade a previous version it will leave it untouched. If you don't want the TM installer to configure it comment the following line -->
+
+<!-- Databases configuration -->
+
+
+<databases>
+
+<!-- Databases type : MSSQL - SQL Server Oracle11g - Oracle 11g + Oracle12c - Oracle 12c + default to MSSQL -->
+
+
+<property name="database.type"> <value>MSSQL</value> </property>
+
+
+<!-- Number of shards to be configured for GBD repository. The value should be between 1 and 16. 1 by default. -->
+
+
+<!-- <property name="gbd.shards.number"> <value>1</value> </property> -->
+
+
+
+<database name="gbd" type="gbd">
+
+<!-- <property name="url"> <value>jdbc:sqlserver://localhost:1433;databaseName=gbdrepo;sendStringParametersAsUnicode=false;disableStatementPooling=false;statementPoolingCacheSize=999999</value> </property> -->
+
+
+<!-- <property name="master.url"> <value>jdbc:sqlserver://localhost:1433;databaseName=master;sendStringParametersAsUnicode=false;disableStatementPooling=false;statementPoolingCacheSize=999999</value> </property> -->
+
+
+
+<property name="server">
+<value>PS-DMNQADB1</value>
+</property>
+<property name="database">
+<value>gbdrepoDev</value>
+</property>
+<property name="username">
+<value>cdweb</value>
+</property>
+<property name="password" type="encrypted">
+<value>U4Wi47iHluc=</value>
+</property>
+<!-- port is required for installation on Oracle or SQL Server named instance -->
+<property name="port"> <value>1433</value> </property>
+
+<!-- instance is required for installation on Oracle or SQL Server named instance -->
+
+
+<!-- <property name="instance"> <value></value> </property> -->
+
+
+</database>
+
+
+<database name="enablement">
+
+<!-- <property name="url"> <value>jdbc:sqlserver://localhost:1433;databaseName=EcEnablement;sendStringParametersAsUnicode=false;disableStatementPooling=false;statementPoolingCacheSize=999999</value> </property> -->
+
+
+
+<property name="server">
+
+<value>PS-DMNQADB1</value>
+
+</property>
+<property name="database">
+<value>EcEnablementDev</value>
+</property>
+<property name="username">
+<value>cdweb</value>
+</property>
+<property name="password" type="encrypted">
+<value>U4Wi47iHluc=</value>
+</property>
+<!-- port is required for installation on Oracle or SQL Server named instance -->
+
+<property name="port"> <value>1433</value> </property>
+
+<!-- instance is required for installation on Oracle or SQL Server named instance -->
+
+<!-- <property name="instance"> <value></value> </property> -->
+
+</database>
+
+<database name="active">
+
+<!-- <property name="url"> <value>jdbc:sqlserver://localhost:1433;databaseName=EcActive;sendStringParametersAsUnicode=false;disableStatementPooling=false;statementPoolingCacheSize=999999</value> </property> -->
+
+
+<property name="server">
+<value>PS-DMNQADB1</value>
+</property>
+<property name="database">
+<value>EcActiveDev</value>
+</property>
+<property name="username">
+<value>cdweb</value>
+</property>
+<property name="password" type="encrypted">
+<value>U4Wi47iHluc=</value>
+</property>
+
+<!-- port is required for installation on Oracle or SQL Server named instance -->
+<property name="port"> <value>1433</value> </property> 
+<!-- instance is required for installation on Oracle or SQL Server named instance -->
+
+<!-- <property name="instance"> <value></value> </property> -->
+
+</database>
+<database name="TMDS" type="datastorage"> 
+<property name="server"> 
+<value>PS-DMNQADB1</value> 
+</property> 
+<property name="database"> 
+<value>TMDSDev</value> 
+</property> 
+<property name="username">
+ <value>cdweb</value> 
+ </property> 
+ <property name="password" type="encrypted"> 
+ <value>U4Wi47iHluc=</value> </property>
+
+<!--<property name="url"> <value>jdbc:sqlserver://localhost:1433;databaseName=datastorage;sendStringParametersAsUnicode=false;disableStatementPooling=false;statementPoolingCacheSize=999999</value> </property> <property name="master.url"> <value>jdbc:sqlserver://localhost:1433;databaseName=master;sendStringParametersAsUnicode=false;disableStatementPooling=false;statementPoolingCacheSize=999999</value> </property>-->
+
+
+<!-- port is required for installation on Oracle or SQL Server named instance -->
+
+
+<property name="port"> <value>1433</value> </property>
+
+
+<!-- instance is required for installation on Oracle or SQL Server named instance -->
+
+
+<!--<property name="instance"> <value></value> </property>-->
+
+</database>
+<!--<database name="reporting">
+
+
+<property name="server">
+
+<value>localhost</value>
+
+</property>
+
+
+<property name="database">
+
+<value>EcActive</value>
+
+</property>
+
+
+<property name="username">
+
+<value>CDWeb</value>
+
+</property>
+
+
+<property name="password">
+
+<value>manager</value>
+
+</property>-->
+
+<!-- port is required for installation on Oracle or SQL Server named instance -->
+
+
+<!-- <property name="port"> <value>1433</value> </property> -->
+
+
+<!-- instance is required for installation on Oracle or SQL Server named instance -->
+
+
+<!-- <property name="instance"> <value></value> </property> -->
+
+
+<!-- <database name="replica" type="reporting"> <property name="server"> <value>localhost</value> </property> <property name="database"> <value>replica</value> </property> <property name="username"> <value>CDWeb</value> </property> <property name="password"> <value>manager</value> </property> -->
+
+
+<!-- <property name="port"> <value>1433</value> </property> -->
+
+
+<!-- instance is required for installation on Oracle or SQL Server named instance -->
+
+
+<!-- <property name="instance"> <value></value> </property> -->
+
+
+<!-- </database> -->
+
+
+<!-- Gdb Data replication. tablesIncludePattern - regular expression to include tables into replication tablesExcludePattern - regular expression to exclude tables from replication -->
+
+
+<gbdreplication> 
+<!-- <property name="tablesExcludePattern"> <value>.+data</value> </property> <property name="tablesExcludePattern"> <value>.+att</value> </property> <property name="tablesExcludePattern"> <value>indexerqueue</value> </property> <property name="tablesExcludePattern"> <value>idinterval</value> </property> -->
+
+
+<property name="tablesIncludePattern"> <value>.+</value> </property>
+
+
+<!--initial fast refresh interval - for Oracle only. (values in seconds) can be updated using maintenance scripts-->
+
+
+<!--seconds 86400 for each 24h, 43200 - 12h, 21600 - 6h-->
+
+
+<!-- <property name="refreshInterval"> <value>86400</value> </property> -->
+
+
+<!--Date when you want first refresh occur (date format: yyyy/dd/MM HH:mm:ss) -->
+
+
+<property name="startDateTime"> <value>2016/13/05 04:55:00</value> </property> 
+</gbdreplication> 
+
+</databases>
+
+<!-- SMTP servers and email addresses. -->
+
+
+
+<emails>
+<smtpServerHostName>smtp.yourorg.com</smtpServerHostName>
+<!-- Options SSL/TLS | STARTTLS | NONE -->
+<smtpServerSecureConnection>SSL/TLS</smtpServerSecureConnection>
+<smtpServerPort>465</smtpServerPort>
+<smtpUserName>username</smtpUserName>
+<smtpPassword type="encrypted">7rRy/iYpZEIaZs/n4coLNw==</smtpPassword>
+<returnEmailAddress>support@yourorg.com</returnEmailAddress>
+<criticalErrorEmail>critical-error@yourorg.com</criticalErrorEmail>
+<monitorServiceEmailList>monitor@yourorg.com</monitorServiceEmailList>
+</emails>
+
+<!-- JMS configuration -->
+
+<jms>
+<jmsserver description="Apache ActiveMQ">
+<property name="ConnectionFactoryJndiName">
+<value>QueueConnectionFactory</value>
+</property>
+<property name="username">
+                    <value>admin</value>
+                </property>
+                <property name="password" type="encrypted">
+                    <value>mNHgPE+ORXk=</value>
+                </property>
+<!-- JMS JNDI properties -->
+<property name="java.naming.provider.url">
+
+<value>failover://(tcp://worker-node1:61616,tcp://worker-node3:61616)?randomize=false</value>
+
+</property>
+
+
+<property name="java.naming.factory.initial">
+
+<value>org.apache.activemq.jndi.ActiveMQInitialContextFactory</value>
+
+</property>
+
+<!-- <property name="custom.jndi.property.name"> <value>custom.jndi.property.value</value> </property> -->
+
+
+</jmsserver>
+
+</jms>
+
+<!-- <tableau-server> <property name="hyperLocation"> <value>C:/hyperLocation</value> </property> <property name="host"> <value>localhost</value> </property> <property name="port"> <value>8000</value> </property> <property name="publisherUsername"> <value>tmpublisher</value> </property> <property name="publisherPassword"> <value>manager</value> </property> <property name="viewerUsername"> <value>tmviewer</value> </property> <property name="viewerPassword"> <value>manager</value> </property> <property name="siteID"> <value></value> </property> <property name="project"> <value></value> </property> <property name="ssl"> <value>false</value> </property> </tableau-server> -->
+
+
+<!-- Credentials to access Edifecs Smart Trading cloud repository -->
+
+
+<!--<cloud-repository> <username>cloud-username</username> <password>manager</password> <url>https://repository.collablynk.com/sb-storage</url> </cloud-repository>-->
+
+</configuration>
+</config>

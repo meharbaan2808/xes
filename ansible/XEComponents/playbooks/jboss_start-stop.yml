@@ -1,0 +1,24 @@
+---
+- name: Restart jboss server
+  hosts: demo
+  vars_files:
+  - env_variables
+  vars_prompt:
+  - name: System
+    prompt: Enter whether JBOSS is Master or Slave
+    private: false
+  - name: Operation
+    prompt: Enter whether operation is start or stop
+    private: false
+  vars:
+    XES1: XES1
+    XES2: XES2
+    targethost: "{{ XES2 if System == 'Master' else XES1 }}"
+
+  tasks:
+  - name: Start or Stop JBOSS Master or Slave
+    shell: bash -lc "./artemis-service {{Operation}}"
+    args:
+     chdir: "{{Edifecs_Install_Dir}}/JBOSS/{{System}}/bin"
+    when: "inventory_hostname == {{targethost}}"
+    

@@ -1,0 +1,18 @@
+---
+- name: Expect module
+  hosts: worker1
+
+  tasks:
+  - name: Install Master component
+    expect:
+       chdir: /opt/EdifecsBuild/JBOSS/amq-broker-7.4.1/bin
+       command: bash -lc "./artemis create /opt/Edifecs/JBOSS/Master"
+       responses:
+           Please provide the default username: 'admin'
+           Please provide the default password: 'admin'
+           Allow anonymous access(.*.): 'y'
+       echo: yes
+    register: output
+
+  - debug:
+       var: output

@@ -1,0 +1,30 @@
+---
+- name: Run scripts
+  hosts: worker3
+ 
+  tasks:
+  - name: Copy bash profile
+    copy: 
+      src: .bash_profile
+      dest: ~/.bash_profile
+      mode: '0755'
+      backup: yes
+ 
+  - name: refresh bash_profile 
+    shell: bash -lc 'source .bash_profile'
+    args:
+      executable: /bin/bash
+
+  - name: Execute remote script
+    shell: "{{ item }}" 
+    args:
+      chdir: /opt/EdifecsBuild/XEngine
+    with_items:
+     - "bash -lc ./XEngineInstaller-linux-ix86_64"
+
+  - name: Execute remote script
+    shell: "{{ item }}"
+    args:
+      chdir: /opt/EdifecsBuild/XEServer
+    with_items:
+     - "bash -lc ./XEServerInstaller-linux-ix86"

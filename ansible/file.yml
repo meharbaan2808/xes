@@ -1,0 +1,35 @@
+---
+- name: File operations
+  hosts: worker1
+
+  tasks:
+  - name: Change file ownership, group and permissions
+    file:
+      path: ~/sftp/join
+      owner: administrator-vm
+      group: administrator-vm
+      mode: '0777'
+
+  - name: create a file with symbolic permissions
+    file: 
+      path: ~/sftp/run.sh
+      state: touch
+      mode: u+rwx,g-wx,o-wx 
+
+  - name: create a directory if it does not exist
+    file:
+      path: ~/sftp/ansible
+      state: directory
+      mode: '0644'
+
+  - name: Remove file (delete file)
+    file:
+      path: ~/sftp/run.sh
+      state: absent
+
+  - name: Recursively remove directory
+    file:
+      path: ~/sftp/ansible
+      state: absent
+
+      

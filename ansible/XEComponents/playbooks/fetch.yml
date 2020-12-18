@@ -1,0 +1,13 @@
+---
+ - hosts: demo
+   vars_files:
+   - env_variables
+   tasks:
+     - name: Fetch the tm.war file from the TM to master
+       run_once: yes
+       fetch: src="{{Edifecs_Build_PATH}}/TM/webapp/tm.war" dest=~/ flat=yes
+       when: "inventory_hostname == 'TM'"
+
+     - name: Copy the file from master to mwiapp02
+       copy: src=~/tm.war dest="{{Edifecs_Install_Dir}}/Tomcat/apache-tomcat-9.0.24/webapps/"
+       when: "inventory_hostname == 'XES1'"

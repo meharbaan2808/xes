@@ -1,0 +1,59 @@
+---
+- name: Move configuration files and start master and slave JBOSS Servers
+  hosts: servers
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Copy broker.xml, jolokia.xml & bootstrap.xml
+    copy:
+      src: "{{ item }}"
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Master/etc"
+      mode: '0755'
+      backup: yes
+    with_items: 
+      - conf/Master/broker.xml
+      - conf/jolokia-access.xml
+    when: "inventory_hostname == 'worker1'"
+
+  - name: Copy broker.xml, jolokia.xml & bootstrap.xml
+    copy:
+      src: "{{ item }}"
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Slave/etc"
+      mode: '0755'
+      backup: yes
+    with_items:
+      - conf/Slave/broker.xml
+      - conf/jolokia-access.xml
+    when: "inventory_hostname == 'worker3'"
+
+   
+  - name: Editing bootstrap.xml to allow access for remote users"
+    replace:
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Master/etc/bootstrap.xml"
+      regexp: 'localhost'
+      replace: '0.0.0.0'
+      backup: yes
+    when: "inventory_hostname == 'worker1'"
+
+  - name: Editing bootstrap.xml to allow access for remote users"
+    replace:
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Slave/etc/bootstrap.xml"
+      regexp: 'localhost'
+      replace: '0.0.0.0'
+      backup: yes
+    when: "inventory_hostname == 'worker3'"
+
+
+  - name: Start master jboss server
+    shell: "source ~/.bash_profile &&  nohup ./artemis-service start  > nohup.out 2>&1 &"
+    args:
+      chdir: "{{ Edifecs_Install_Dir }}/JBOSS/Master/bin"
+    when: "inventory_hostname == 'worker1'"
+
+  - name: Start slave jboss server
+    shell: "source ~/.bash_profile &&  nohup ./artemis-service start  > nohup.out 2>&1 &"
+    args:
+      chdir: "{{ Edifecs_Install_Dir }}/JBOSS/Slave/bin"
+    when: "inventory_hostname == 'worker3'"
+

@@ -1,0 +1,56 @@
+---
+ - name: Download Edifecs XE,XES,XEConnect and EAM
+   hosts: demo
+   vars_files:
+   - env_variables 
+   
+   tasks:
+   - name: Create Edifecs build folder {{Edifecs_Build_Path}}
+     file:
+       path: "{{ Edifecs_Build_PATH }}"
+       state: directory
+       mode: '0755'
+
+   - name: Create subfolders under Edifecs build folder
+     file:
+       path: "{{ Edifecs_Build_PATH }}/{{ item }}"
+       state: directory
+       mode: '0755'
+     with_items: "{{ XE_Folders }}"
+
+   - name: Download packages for XEngine, XServer & EAM from SVN
+     get_url:
+       url: "{{ vars[item + '_Url']}}"
+       dest: "{{Edifecs_Build_PATH}}/{{item}}/{{vars[item + '_File']}}"
+       validate_certs: false
+       mode: '0755' 
+     with_items: "{{ XE_Folders }}"
+
+   - name: Unarchive the compressed archive packages
+     unarchive:
+       src: "{{Edifecs_Build_PATH}}/{{item}}/{{vars[item + '_File']}}"
+       dest: "{{Edifecs_Build_PATH}}/{{item}}"
+       remote_src: yes
+     with_items: "{{ XE_Folders }}"
+
+   - name: Install XEngine on selected remote machines
+     shell: "bash -lc ./XEngineInstaller-linux-ix86_64"
+     args:
+       chdir: "{{ Edifecs_Build_PATH }}/XEngine"
+  
+   - name: Install XEServer on selected remote machines
+     shell: "bash -lc ./XEServerInstaller-linux-ix86"
+     args:
+       chdir: "{{ Edifecs_Build_PATH }}/XEServer"
+
+   - name: Install EAM on selected remote machines
+     shell: "bash -lc ./EAMInstaller-linux-ix86"
+     args:
+       chdir: "{{ Edifecs_Build_PATH }}/EAM"
+
+   - name: Copy XEServer license file to remote machine
+     copy:
+       src: license.lic
+       dest: "{{ Edifecs_Install_Dir }}/XEServer"
+       mode: '0755'
+   

@@ -1,0 +1,17 @@
+---
+- name: File from local and remote machine
+  hosts: worker1
+
+  tasks:
+  - name: local to remote
+    copy:
+      src: join_token
+      dest: ~/sftp/join
+      mode: '0755'
+      backup: yes
+
+  - name: Copy Inline Content
+    copy:
+      content: "This is  a test file"
+      dest: ~/sftp/info
+

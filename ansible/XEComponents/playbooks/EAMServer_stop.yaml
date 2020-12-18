@@ -1,0 +1,20 @@
+---
+ - name: Stop EAM Server on remote machines
+   hosts: XES
+   vars_files:
+   - env_variables
+
+   tasks:
+   - name: Stop EAM server on selected hosts
+     shell: "source ~/.bash_profile &&  nohup ./stopEAMServer.sh  > nohup.out 2>&1 &"
+     args: 
+       chdir: "{{ Edifecs_Install_Dir }}/EAM/Server/bin" 
+
+   - name: Check if EAM processing is running
+     shell: "ps -ef |grep EAM"
+     register: output
+     args: 
+       executable: /bin/bash 
+
+   - debug:
+       var: output

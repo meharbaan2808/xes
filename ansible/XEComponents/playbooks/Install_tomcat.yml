@@ -1,0 +1,37 @@
+---
+- name: Install Tomcat server
+  hosts: XES1
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Create Tomcat folder under {{Edifecs_Build_Path}}
+    file:
+       path: "{{ Edifecs_Build_PATH }}/Tomcat"
+       state: directory
+       owner: administrator-vm
+       group: administrator-vm       
+       mode: '0755'
+
+
+  - name: Create Tomcat folder under {{Edifecs_Build_Path}}
+    file:
+       path: "{{ Edifecs_Install_Dir }}/Tomcat"
+       state: directory
+       owner: administrator-vm
+       group: administrator-vm
+       mode: '0755'
+
+
+  - name: Download Tomcat package from SVN
+    get_url:
+       url: "{{ Tomcat_Url }}" 
+       dest: "{{ Edifecs_Build_PATH }}/Tomcat"
+       validate_certs: false
+       mode: '0755'
+
+  - name: Untar the downloaded Tomcat package
+    unarchive:
+       src: "{{ Edifecs_Build_PATH }}/Tomcat/{{ Tomcat_File }}"
+       dest: "{{ Edifecs_Install_Dir }}/Tomcat"
+       remote_src: yes

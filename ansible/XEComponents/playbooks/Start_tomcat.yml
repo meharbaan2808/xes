@@ -1,0 +1,16 @@
+---
+- name: Start Tomcat server
+  hosts: XES1
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Start Tomcat server
+    shell: "bash -lc ./startup.sh"
+    register: output
+    args:
+       chdir: "{{ Edifecs_Install_Dir }}/Tomcat/apache-tomcat-9.0.24/bin"
+
+  - debug:
+       var: output
+

@@ -1,0 +1,19 @@
+---
+- name: Service start, stop & restart
+  hosts: worker1
+
+  tasks:
+  - name: Service start
+    service:
+        name: httpd
+        state: started
+
+  - name: Service stop 
+    service:
+        name: httpd
+        state: stopped
+
+  - name: Service restart
+    service:
+        name: httpd
+        state: restarted

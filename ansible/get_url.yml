@@ -1,0 +1,11 @@
+---
+- name: Download HTTP,HTTPS & FTP
+  hosts: worker1
+
+  tasks:
+  - name: downloading package
+    get_url:
+       url: https://ecsvn01.corp.edifecs.com/ps/Daman/DamanUpgrade/Setups/EAM_9.2/EAM_9.2.0.11356_20191217.tar.gz
+       dest: ~/sftp/EAM.tar.gz
+       validate_certs: false
+       mode: '0755'

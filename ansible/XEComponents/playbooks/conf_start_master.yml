@@ -1,0 +1,37 @@
+---
+- name: Move configuration files and start master and slave JBOSS Servers
+  hosts: XES2
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Copy broker.xml
+    copy:
+      src: "{{ item }}"
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Master/etc/broker.xml"
+      mode: '0755'
+      backup: yes
+    with_items: 
+      - conf/Master/broker_m.xml
+
+  - name: Copy broker.xml, jolokia.xml & bootstrap.xml
+    copy:
+      src: "{{ item }}"
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Master/etc"
+      mode: '0755'
+      backup: yes
+    with_items:
+      - conf/jolokia-access.xml
+
+   
+  - name: Editing bootstrap.xml to allow access for remote users"
+    replace:
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Master/etc/bootstrap.xml"
+      regexp: 'localhost'
+      replace: '0.0.0.0'
+      backup: yes
+
+  - name: Start master jboss server
+    shell: "source ~/.bash_profile &&  nohup ./artemis-service start  > nohup.out 2>&1 &"
+    args:
+      chdir: "{{ Edifecs_Install_Dir }}/JBOSS/Master/bin"

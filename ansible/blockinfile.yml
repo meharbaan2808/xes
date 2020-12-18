@@ -1,0 +1,33 @@
+---
+- name: install and start apache
+  hosts: worker1
+
+  tasks:
+  - name: Insert/Update configuration block
+    blockinfile:
+          path: join_token
+          block: |
+             Match User ansible-agent
+             PasswordAuthentication
+          marker: "# Configuration block"
+
+  - name: Insert/Update configuration block
+    blockinfile:
+          path: join_token
+          block: |
+             iface eth0 inet static
+             address 192.0.2.23
+             netmask 255.255.255.0
+          marker: "# New Configuration block"
+
+  - name: Add mappings to /etc/hosts
+    blockinfile:
+         path: host
+         block: |
+             {{ item.ip }} {{ item.name }}
+         marker: "# {{ item.name }}"
+    loop:
+         - { name: host1, ip: 10.10.1.10 }
+         - { name: host2, ip: 10.10.1.11 }
+         - { name: host3, ip: 10.10.1.12 }
+

@@ -1,0 +1,9 @@
+---
+- import_playbook: playbooks/prerequisites.yml
+- import_playbook: playbooks/Download_Install_XE_XES_EAM.yml
+- import_playbook: playbooks/Download_Install_HF.yml
+- import_playbook: playbooks/Install_tomcat.yml
+- import_playbook: playbooks/Install_jboss_master.yml
+- import_playbook: playbooks/Install_jboss_slave.yml
+- import_playbook: playbooks/conf_start_master.yml
+- import_playbook: playbooks/conf_start_slave.yml 

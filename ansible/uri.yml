@@ -1,0 +1,19 @@
+---
+- name: Interacts with webservices
+  hosts: worker1
+
+  tasks:
+  - name: Check that you can connect (GET) to a page and it returns a status 200
+    uri:
+      url: http://10.30.32.216:9083/ws?wsdl
+      return_content: yes
+    register: this
+
+  - debug:
+       var: this
+    
+  - name: Check rest webservices
+    uri:
+     url: http://10.30.32.78:31162/HumanaPoT/Validate?resultTypes=All
+     method: POST
+     src: request 

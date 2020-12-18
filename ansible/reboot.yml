@@ -1,0 +1,7 @@
+---
+ - name: Reboot
+   hosts: worker1
+
+   tasks:
+   - name: Reboot
+     reboot:

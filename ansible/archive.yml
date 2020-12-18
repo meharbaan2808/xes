@@ -1,0 +1,38 @@
+---
+- name: install and start apache
+  hosts: worker1
+
+  tasks:
+  - name: compress the directory
+    archive:
+        path: ~/sftp
+        dest: ~/sftp.tar.gz
+
+  - name: compress a file
+    archive:
+        path: join_token
+        remove: yes
+
+  - name: create a zip archive
+    archive:
+        path: worker-node1
+        format: zip
+
+  - name: Create a bz2 archive of multiple files
+    archive: 
+        path:
+        - worker-node1
+        - docker-registry.crt
+        dest: ~/sftp.bz2
+        format: bz2
+
+  - name: Create a bz2 archive of a globbed path, while excluding a glob of dirnames
+    archive:
+        path: 
+        - ~/docker/*
+        dest: docker.bz2
+        exclude_path:
+        - ~/docker/configuration
+        - ~/docker/logs
+        format: bz2
+

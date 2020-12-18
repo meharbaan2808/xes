@@ -1,0 +1,9 @@
+---
+- name: Manages packages with the yum package manager
+  hosts: worker1
+
+  tasks:
+  - name: install the latest version of Apache
+    yum:
+     name: httpd
+     state: latest

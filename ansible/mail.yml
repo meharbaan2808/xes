@@ -1,0 +1,16 @@
+---
+- name: Send email
+  hosts: worker1
+
+  tasks:
+  - name: Sending an e-mail using Gmail SMTP servers
+    mail:
+      host: email.edifecs.com
+      port: 22
+      username: meharbaan.singh@edifecs.com
+      password: Daman#12345&
+      to: meharbaan.singh@edifecs.com
+      subject: Ansible-report
+      body: System {{ ansible_hostname }} has been successfully provisioned.
+ 
+

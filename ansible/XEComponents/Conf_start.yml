@@ -1,0 +1,26 @@
+---
+- name: Move configuration files and start master and slave JBOSS Servers
+  hosts: worker1
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Copy broker.xml, jolokia.xml & bootstrap.xml
+    copy:
+      src: "{{ item }}"
+      dest: "{{ Edifecs_Install_Dir }}/JBOSS/Master/etc"
+      mode: '0755'
+      backup: yes
+    with_items: 
+      - conf/Master/broker.xml
+      - conf/jolokia-access.xml
+      - conf/bootstrap.xml
+
+  - name: Start master jboss server
+    shell: bash -lc "./artemis run"
+    register: output
+    args:
+      chdir: "{{ Edifecs_Install_Dir }}/JBOSS/Master/bin"
+
+  - debug:
+      var: output

@@ -1,0 +1,77 @@
+---
+- name: Install Master JBOSS server
+  hosts: servers
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Create JBOSS folder under {{Edifecs_Build_Path}}
+    file:
+       path: "{{ Edifecs_Build_PATH }}/JBOSS"
+       state: directory
+       owner: administrator-vm
+       group: administrator-vm       
+       mode: '0755'
+
+
+  - name: Create JBOSS folder under {{Edifecs_Build_Path}}
+    file:
+       path: "{{ Edifecs_Install_Dir }}/JBOSS/Master"
+       state: directory
+       owner: administrator-vm
+       group: administrator-vm
+       mode: '0755'
+    when: "inventory_hostname == 'worker1'"
+
+
+  - name: Create JBOSS folder under {{Edifecs_Build_Path}}
+    file:
+       path: "{{ Edifecs_Install_Dir }}/JBOSS/Slave"
+       state: directory
+       owner: administrator-vm
+       group: administrator-vm
+       mode: '0755'
+    when: "inventory_hostname == 'worker3'"
+
+
+  - name: Download JBOSS package from SVN
+    get_url:
+       url: "{{ JBOSS_Url }}" 
+       dest: "{{ Edifecs_Build_PATH }}/JBOSS"
+       validate_certs: false
+       mode: '0755'
+
+  - name: Untar the downloaded JBOSS package
+    unarchive:
+       src: "{{ Edifecs_Build_PATH }}/JBOSS/{{ JBOSS_File }}"
+       dest: "{{ Edifecs_Install_Dir }}/JBOSS/"
+       remote_src: yes
+
+  - name: Install Master component
+    expect:
+       chdir: "{{ Edifecs_Install_Dir }}/JBOSS/amq-broker-7.4.1/bin"
+       command: bash -lc "./artemis create {{ Edifecs_Install_Dir }}/JBOSS/Master"
+       responses:
+           Please provide the default username: 'admin'
+           Please provide the default password: 'admin'
+           Allow anonymous access(.*.): 'y'
+       echo: yes
+    register: output
+    when: "inventory_hostname == 'worker1'"
+
+  - name: Install Slave component
+    expect:
+       chdir: "{{ Edifecs_Install_Dir }}/JBOSS/amq-broker-7.4.1/bin"
+       command: bash -lc "./artemis create {{ Edifecs_Install_Dir }}/JBOSS/Slave"
+       responses:
+           Please provide the default username: 'admin'
+           Please provide the default password: 'admin'
+           Allow anonymous access(.*.): 'y'
+       echo: yes
+    register: output1
+    when: "inventory_hostname == 'worker3'"
+
+
+
+  - debug:
+       var: output1
